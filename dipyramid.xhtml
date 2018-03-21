@@ -18,7 +18,7 @@
     <h1>Web3D Assignment 1 - By Ming Hu s3554025</h1>
     <X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="600px" height="600px">
         <Scene>
-            <Viewpoint position='0 0 5'/>
+            <Viewpoint position='0 0 10'/>
             <Shape DEF="BaseAxis">
                 <IndexedLineSet coordIndex=" 0 1 -1 0 2 -1 0 3 -1" colorPerVertex="true" colorIndex="0 0 -1 1 1 -1 2 2 -1">
                     <Coordinate point="0 0 0, 10 0 0, 0 10 0, 0 0 10" />
@@ -40,7 +40,6 @@
                 <Shape USE="BaseAxis"/>
                 <Appearance>
                     <Material shininess="1" specularColor="1 1 1"> </Material>
-                    <TextureTransform rotation="4.71" center="0.02, 0.06" scale="0.85, 0.88" translation="-0.02, 0"/>
                     <ImageTexture url="./penta.png"/>
                 </Appearance>
                 <IndexedFaceSet 
@@ -66,6 +65,16 @@
                         -0.309 0 -0.951,
                         0 -0.5 0
                     "/>
+                    
+                    <!-- Here's the problem... -->
+                    <TextureCoordinate point="
+                        0.5 0.5,
+                        0 0.5,
+                        0.34 0.975, 
+                        0.91 0.795,
+                        0.91 0.205,
+                        0.34 0.025,
+                        0.5 0.5"/>
                 </IndexedFaceSet>
             </Shape>
         </Scene>
