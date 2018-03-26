@@ -36,6 +36,22 @@
                     </IndexedLineSet>
                 </Shape>
 
+                <!-- Paw -->
+                <Shape DEF="Paw">
+                    <Appearance>
+                        <Material shininess="1" specularColor="1 1 1"> </Material>
+                    </Appearance>
+                    <IndexedFaceSet coordIndex="0 1 2 -1">
+                        <Coordinate point="
+                            0 0 0.25,
+                            0 0 -0.25,
+                            -0.5 0 0
+                        ">
+                        </Coordinate>
+                        
+                    </IndexedFaceSet>
+                </Shape>
+
                 <!-- Arm node section -->
                 <Shape DEF="ArmNode">
                     <Appearance>
@@ -117,31 +133,44 @@
                     </IndexedFaceSet>
                 </Shape>
 
-                
+                <!-- Arms -->
+                <Transform DEF="Arm">
+                    <!-- First node -->
+                    <Transform translation="0 0 0">
+                        <Shape USE="ArmNode"></Shape>
+                        <Shape USE="BaseAxis"></Shape>
+                    </Transform>
+        
+                    <!-- Second node -->
+                    <Transform translation="1 0 0">
+                        <Shape USE="ArmNode"></Shape>
+                        <Shape USE="BaseAxis"></Shape>
+                    </Transform>
+
+                    <!-- Paw -->
+                    <Transform translation="2 0 0">
+                        <Shape USE="Paw"/>
+                    </Transform>
+                </Transform>
+
             </Switch>
 
             <!-- Toad manipulation -->
+            <!-- Left arm -->
+            <Transform translation="1.309 0 -0.588">
+                <Transform USE="Arm"/>
+            </Transform>
+
+            <!-- Right arm -->
+            <Transform translation="1.309 0 0.588">
+                    <Transform USE="Arm"/>
+            </Transform>
             <!-- Body -->
             <Transform translation="0 0 0">
+                <Shape USE="BaseAxis"/>
                 <Shape USE="ToadBody"/>
             </Transform>
 
-            <!-- Second node -->
-            <Transform translation="1 0 0">
-                <Shape USE="ArmNode"></Shape>
-                <Shape USE="BaseAxis"></Shape>
-            </Transform>
-
-            <!-- Third node -->
-            <Transform translation="2 0 0">
-                <Shape USE="ArmNode"></Shape>
-                <Shape USE="BaseAxis"></Shape>
-            </Transform>
-
-            <!-- Triangle foot -->
-            <Transform translation="3 0 0">
-
-            </Transform>
         </Scene>
     </X3D>
 </body>
