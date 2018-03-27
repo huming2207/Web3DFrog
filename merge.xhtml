@@ -245,9 +245,22 @@
                     </Transform>
                 </Transform>
 
-            </Switch>
+                <!-- Pond  -->
+                <Shape DEF="Pond">
+                    <Box size="20 10 0.1"/>
+                    <Appearance>
+                        <Material diffuseColor='0.25 0.26 0.50'/>
+                    </Appearance>
+                </Shape>
+
+            </Switch> <!-- Component definiation ends here -->
 
             <!-- Toad manipulation -->
+            <!-- Pond (90 deg rotation on x axis)-->
+            <Transform translation="0 -3 0" rotation="1 0 0 1.5708">
+                <Shape USE="Pond"/>
+            </Transform>
+
             <!-- Head -->
             <Transform translation="1.309 0 0">
                 <Transform USE="UpperHeadNode"/>
@@ -283,8 +296,6 @@
                 <Shape USE="BaseAxis"></Shape>
                 <Transform USE="Leg" />
             </Transform>
-
-
         </Scene>
     </X3D>
 </body>
