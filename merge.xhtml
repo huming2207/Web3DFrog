@@ -102,7 +102,7 @@
                 </Transform>
 
                 <!-- Head node ("half" arm node, cut at x/z axis) -->
-                <Shape DEF="LowerHeadNode">
+                <Shape DEF="UpperHeadNode">
                     <Appearance>
                         <Material shininess="1" specularColor="0 1 0" diffuseColor="0.21 0.5 0"> </Material>
                     </Appearance>
@@ -132,21 +132,10 @@
                     </IndexedFaceSet>
                 </Shape>
 
-                <Transform DEF="UpperHeadNode">
-                    
-                    <!-- Head node again but up side down -->
+                <!-- Head node again but up side down -->
+                <Transform DEF="LowerHeadNode">
                     <Transform rotation="1 0 0 3.14159">
-                        <Shape USE="LowerHeadNode"/>
-                    </Transform>
-                    
-                    <!-- Left Eye -->
-                    <Transform translation="0.2 0.18 -0.15">
-                        <Transform USE="Eye"/>
-                    </Transform>
-    
-                    <!-- Right Eye -->
-                    <Transform translation="0.2 0.18 0.15">
-                            <Transform USE="Eye"/>
+                        <Shape USE="UpperHeadNode"/>
                     </Transform>
                 </Transform>
 
@@ -255,47 +244,133 @@
 
             </Switch> <!-- Component definiation ends here -->
 
-            <!-- Toad manipulation -->
             <!-- Pond (90 deg rotation on x axis)-->
-            <Transform translation="0 -3 0" rotation="1 0 0 1.5708">
+            <Transform translation="0 -1 0" rotation="1 0 0 1.5708">
                 <Shape USE="Pond"/>
             </Transform>
 
-            <!-- Head -->
-            <Transform translation="1.309 0 0">
-                <Transform USE="UpperHeadNode"/>
-                <Transform USE="LowerHeadNode"/>
+            <!-- Toad manipulation -->
+            <Transform DEF="WholeToad">
+
+                <!-- Head -->
+                <Transform translation="1.309 0 0">
+                    <Transform USE="UpperHeadNode"/>
+                </Transform>
+
+                <Transform DEF="LowerHead">
+                    <Transform translation="1.309 0.10 0">
+                        <Transform USE="LowerHeadNode"/>
+                    </Transform>
+                </Transform>
+
+                <!-- Left Eye -->
+                <Transform translation="1.5 0.15 -0.15">
+                    <Transform USE="Eye"/>
+                </Transform>
+
+                <!-- Right Eye -->
+                <Transform translation="1.5 0.15 0.15">
+                        <Transform USE="Eye"/>
+                </Transform>
+
+                <!-- Body -->
+                <Transform translation="0 0 0">
+                    <Shape USE="BaseAxis" />
+                    <Shape USE="ToadBody" />
+                </Transform>
+
+                <!-- Left arm -->
+                <Transform translation="1.309 0 -0.588">
+                    <Shape USE="BaseAxis"></Shape>
+                    <Transform USE="Arm" />
+                </Transform>
+
+                <!-- Right arm -->
+                <Transform translation="1.309 0 0.588">
+                    <Shape USE="BaseAxis"></Shape>
+                    <Transform USE="Arm" />
+                </Transform>
+
+                <!-- Left leg -->
+                <Transform rotation="0 1 0 1" translation="-1.2 0 0.45" DEF="LeftLeg">
+                    <Shape USE="BaseAxis"></Shape>
+                    <Transform USE="Leg" />
+                </Transform>
+
+                <!-- Right leg -->
+                <Transform rotation="0 1 0 -1" translation="-1.2 0 -0.45" DEF="RightLeg">
+                    <Shape USE="BaseAxis"></Shape>
+                    <Transform USE="Leg" />
+                </Transform>
             </Transform>
 
-            <!-- Body -->
-            <Transform translation="0 0 0">
-                <Shape USE="BaseAxis" />
-                <Shape USE="ToadBody" />
-            </Transform>
+            <!-- Animation stuff -->
+            <!-- Toad jump -->
+            <TimeSensor DEF="ToadBodyTimer" cycleInterval="5" loop="true"></TimeSensor>
+            <PositionInterpolator DEF="ToadMover" key="0 0.5 1" keyValue="-3 0 0  0 3 0  3 0 0"></PositionInterpolator>
+            <Route fromNode="ToadBodyTimer" fromField ="fraction_changed" toNode="ToadMover" toField="set_fraction"></Route>
+            <Route fromNode="ToadMover" fromField ="value_changed" toNode="WholeToad" toField="translation"></Route>
 
-            <!-- Left arm -->
-            <Transform translation="1.309 0 -0.588">
-                <Shape USE="BaseAxis"></Shape>
-                <Transform USE="Arm" />
-            </Transform>
+            <!-- Toad head/mouth -->
+            <TimeSensor DEF="ToadHeadTimer" cycleInterval="5" loop="true"></TimeSensor>
+            <OrientationInterpolator 
+                DEF='ToadMouthOpener' 
+                key='0 0.25 0.5 1 1.25 1.5' 
+                keyValue='0 0 1 0, 0 0 1 -0.1, 0 0 1 -0.2, 0 0 1 -0.1, 0 0 1 0'>
+            </OrientationInterpolator>
+            <ROUTE 
+                fromNode='ToadHeadTimer' 
+                fromField='fraction_changed' 
+                toNode='ToadMouthOpener'  
+                toField='set_fraction' 
+            />
+            <ROUTE 
+                fromNode='ToadMouthOpener'  
+                fromField='value_changed' 
+                toNode='LowerHead'  
+                toField='set_rotation' 
+            />
 
-            <!-- Right arm -->
-            <Transform translation="1.309 0 0.588">
-                <Shape USE="BaseAxis"></Shape>
-                <Transform USE="Arm" />
-            </Transform>
+            <!-- Toad left leg horizontal movement -->
+            <TimeSensor DEF="ToadLeftLegHTimer" cycleInterval="5" loop="true"></TimeSensor>
+            <OrientationInterpolator 
+                DEF='ToadLeftLegHMover' 
+                key='0 0.25 0.5 1 1.25 1.5' 
+                keyValue='0 1 0 0, 0 1 0 0.25, 0 1 0 0.5, 0 1 0 0.25, 0 1 0 0'>
+            </OrientationInterpolator>
+            <ROUTE 
+                fromNode='ToadLeftLegHTimer' 
+                fromField='fraction_changed' 
+                toNode='ToadLeftLegHMover'  
+                toField='set_fraction' 
+            />
+            <ROUTE 
+                fromNode='ToadLeftLegHMover'  
+                fromField='value_changed' 
+                toNode='LeftLeg'  
+                toField='set_rotation' 
+            />
 
-            <!-- Left leg -->
-            <Transform rotation="0 1 0 1" translation="-1.2 0 0.45">
-                <Shape USE="BaseAxis"></Shape>
-                <Transform USE="Leg" />
-            </Transform>
+            <!-- Toad left leg horizontal movement -->
+            <TimeSensor DEF="ToadRightLegHTimer" cycleInterval="5" loop="true"></TimeSensor>
+            <OrientationInterpolator 
+                DEF='ToadRightLegHMover' 
+                key='0 0.25 0.5 1 1.25 1.5' 
+                keyValue='0 1 0 0, 0 1 0 -0.2, 0 1 0 -0.5, 0 1 0 -0.2, 0 1 0 0'>
+            </OrientationInterpolator>
+            <ROUTE 
+                fromNode='ToadRightLegHTimer' 
+                fromField='fraction_changed' 
+                toNode='ToadRightLegHMover'  
+                toField='set_fraction' 
+            />
+            <ROUTE 
+                fromNode='ToadRightLegHMover'  
+                fromField='value_changed' 
+                toNode='RightLeg'  
+                toField='set_rotation' 
+            />
 
-            <!-- Left leg -->
-            <Transform rotation="0 1 0 -1" translation="-1.2 0 -0.45">
-                <Shape USE="BaseAxis"></Shape>
-                <Transform USE="Leg" />
-            </Transform>
         </Scene>
     </X3D>
 </body>
