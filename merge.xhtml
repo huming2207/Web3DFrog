@@ -314,8 +314,14 @@
             </Transform>
 
             <!-- Animation stuff -->
+            <!-- Touch sensor -->
+            <TouchSensor DEF="ToadToucher"/>
+
             <!-- Main timer -->
-            <TimeSensor DEF="ToadTimer" cycleInterval="5" loop="true"></TimeSensor>
+            <TimeSensor DEF="ToadTimer" cycleInterval="5" loop="true" enabled="false"></TimeSensor>
+
+            <!-- Touch route -->
+            <Route fromField="isActive" fromNode="ToadToucher" toField="enabled" toNode="ToadTimer"/>
 
             <!-- Toad jump -->            
             <PositionInterpolator 
