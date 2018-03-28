@@ -16,7 +16,7 @@
 
 <body>
     <h1>Web3D Assignment 1 - By Ming Hu s3554025</h1>
-    <X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="600px" height="600px">
+    <X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="1280px" height="720px">
         <Scene>
             <!-- 
                 Some of the comments below are written in advanced Chinglish 
@@ -24,7 +24,7 @@
             -->
 
             <!-- Bring the object nearer  -->
-            <Viewpoint position='0 0 10' />
+            <Viewpoint position='0 0 20' />
 
             <!-- Definition (will not display) -->
             <Switch choice="-1">
@@ -193,45 +193,9 @@
                     </IndexedFaceSet>
                 </Shape>
 
-                <!-- Arms -->
-                <Transform DEF="Arm">
-                    <!-- First node -->
-                    <Transform translation="0 0 0">
-                        <Shape USE="ArmNode"></Shape>
-                    </Transform>
-
-                    <!-- Second node -->
-                    <Transform translation="1 0 0">
-                        <Shape USE="ArmNode"></Shape>
-                    </Transform>
-
-                    <!-- Paw -->
-                    <Transform translation="2 0 0">
-                        <Shape USE="Paw" />
-                    </Transform>
-                </Transform>
-
-                <!-- Legs -->
-                <Transform DEF="Leg" rotation="0 0 1 3.14">
-                    <!-- First node -->
-                    <Transform translation="0 0 0">
-                        <Shape USE="ArmNode"></Shape>
-                    </Transform>
-
-                    <!-- Second node -->
-                    <Transform translation="1 0 0">
-                        <Shape USE="ArmNode"></Shape>
-                    </Transform>
-
-                    <!-- Third node -->
-                    <Transform translation="2 0 0">
-                        <Shape USE="ArmNode"></Shape>
-                    </Transform>
-
-                    <!-- Paw -->
-                    <Transform translation="3 0 0">
-                        <Shape USE="Paw" />
-                    </Transform>
+                <!-- Leg node -->
+                <Transform DEF="LegNode" rotation="0 0 1 3.14">
+                    <Shape USE="ArmNode"></Shape>
                 </Transform>
 
                 <!-- Pond  -->
@@ -280,46 +244,106 @@
                 </Transform>
 
                 <!-- Left arm -->
-                <Transform translation="1.309 0 -0.588">
-                    <Shape USE="BaseAxis"></Shape>
-                    <Transform USE="Arm" />
+                <Transform translation="1.309 -0.2 -0.588">
+                    <!-- First node -->
+                    <Transform translation="0 0 0" DEF="ArmHip">
+                        <Shape USE="ArmNode"></Shape>
+                    </Transform>
+
+                    <Transform DEF="ArmAnkle">
+                        <!-- Second node -->
+                        <Transform translation="1 0 0">
+                            <Shape USE="ArmNode"></Shape>
+                        </Transform>
+    
+                        <!-- Paw -->
+                        <Transform translation="2 0 0">
+                            <Shape USE="Paw" />
+                        </Transform>
+                    </Transform>
                 </Transform>
 
                 <!-- Right arm -->
-                <Transform translation="1.309 0 0.588">
-                    <Shape USE="BaseAxis"></Shape>
-                    <Transform USE="Arm" />
+                <Transform translation="1.309 -0.2 0.588">
+                    <Transform USE="ArmHip" />
+                    <Transform USE="ArmAnkle" />
                 </Transform>
 
                 <!-- Left leg -->
-                <Transform rotation="0 1 0 1" translation="-1.2 0 0.45" DEF="LeftLeg">
-                    <Shape USE="BaseAxis"></Shape>
-                    <Transform USE="Leg" />
+                <Transform rotation="0 1 0 2.5" translation="-1.2 -0.25 -0.45" DEF="LeftLeg">
+                    <Transform rotation="0 0 1 -0.5">
+                        <!-- First node -->
+                        <Transform translation="0 0 0" DEF="LegHip">
+                            <Shape USE="LegNode"></Shape>
+                        </Transform>
+    
+                        <!-- Second node -->
+                        <Transform translation="1 0 0" DEF="LegKnee">
+                            <Shape USE="LegNode"></Shape>
+                        </Transform>
+    
+                        <!-- Third node -->
+                        <Transform DEF="LegAnkle">
+                            <Transform translation="1 0 0">
+                                    <Shape USE="LegNode"></Shape>
+                                </Transform>
+            
+                                <!-- Paw -->
+                                <Transform translation="2 0 0">
+                                    <Shape USE="Paw" />
+                            </Transform>
+                        </Transform>
+                    </Transform>
                 </Transform>
 
                 <!-- Right leg -->
-                <Transform rotation="0 1 0 -1" translation="-1.2 0 -0.45" DEF="RightLeg">
-                    <Shape USE="BaseAxis"></Shape>
-                    <Transform USE="Leg" />
+                <Transform rotation="0 1 0 -2.5" translation="-1.2 -0.25 0.45" DEF="RightLeg">
+                    <Transform rotation="0 0 1 -0.5" >
+
+                        <!-- First node -->
+                        <Transform translation="0 0 0" USE="LegHip"/>
+    
+                        <!-- Second node -->
+                        <Transform translation="1 0 0" USE="LegKnee"/>
+    
+                        <!-- Third node -->
+                        <Transform USE="LegAnkle"/>
+                    </Transform>
+
                 </Transform>
             </Transform>
 
             <!-- Animation stuff -->
-            <!-- Toad jump -->
-            <TimeSensor DEF="ToadBodyTimer" cycleInterval="5" loop="true"></TimeSensor>
-            <PositionInterpolator DEF="ToadMover" key="0 0.5 1" keyValue="-3 0 0  0 3 0  3 0 0"></PositionInterpolator>
-            <Route fromNode="ToadBodyTimer" fromField ="fraction_changed" toNode="ToadMover" toField="set_fraction"></Route>
-            <Route fromNode="ToadMover" fromField ="value_changed" toNode="WholeToad" toField="translation"></Route>
+            <!-- Main timer -->
+            <TimeSensor DEF="ToadTimer" cycleInterval="5" loop="true"></TimeSensor>
+
+            <!-- Toad jump -->            
+            <PositionInterpolator 
+                DEF="ToadMover" 
+                key="0 0.5 1" 
+                keyValue="-3 0 0  0 3 0  3 0 0">
+            </PositionInterpolator>
+            <Route 
+                fromNode="ToadTimer" 
+                fromField ="fraction_changed" 
+                toNode="ToadMover" 
+                toField="set_fraction">
+            </Route>
+            <Route 
+                fromNode="ToadMover" 
+                fromField ="value_changed" 
+                toNode="WholeToad" 
+                toField="translation">
+            </Route>
 
             <!-- Toad head/mouth -->
-            <TimeSensor DEF="ToadHeadTimer" cycleInterval="5" loop="true"></TimeSensor>
             <OrientationInterpolator 
                 DEF='ToadMouthOpener' 
                 key='0 0.25 0.5 1 1.25 1.5' 
                 keyValue='0 0 1 0, 0 0 1 -0.1, 0 0 1 -0.2, 0 0 1 -0.1, 0 0 1 0'>
             </OrientationInterpolator>
             <ROUTE 
-                fromNode='ToadHeadTimer' 
+                fromNode='ToadTimer' 
                 fromField='fraction_changed' 
                 toNode='ToadMouthOpener'  
                 toField='set_fraction' 
@@ -332,14 +356,13 @@
             />
 
             <!-- Toad left leg horizontal movement -->
-            <TimeSensor DEF="ToadLeftLegHTimer" cycleInterval="5" loop="true"></TimeSensor>
             <OrientationInterpolator 
                 DEF='ToadLeftLegHMover' 
                 key='0 0.25 0.5 1 1.25 1.5' 
-                keyValue='0 1 0 0, 0 1 0 0.25, 0 1 0 0.5, 0 1 0 0.25, 0 1 0 0'>
+                keyValue='0 1 0 2.5, 0 1 0 2.75, 0 1 0 3, 0 1 0 2.75, 0 1 0 2.5'>
             </OrientationInterpolator>
             <ROUTE 
-                fromNode='ToadLeftLegHTimer' 
+                fromNode='ToadTimer' 
                 fromField='fraction_changed' 
                 toNode='ToadLeftLegHMover'  
                 toField='set_fraction' 
@@ -351,15 +374,14 @@
                 toField='set_rotation' 
             />
 
-            <!-- Toad left leg horizontal movement -->
-            <TimeSensor DEF="ToadRightLegHTimer" cycleInterval="5" loop="true"></TimeSensor>
+            <!-- Toad right leg horizontal movement -->
             <OrientationInterpolator 
                 DEF='ToadRightLegHMover' 
                 key='0 0.25 0.5 1 1.25 1.5' 
-                keyValue='0 1 0 0, 0 1 0 -0.2, 0 1 0 -0.5, 0 1 0 -0.2, 0 1 0 0'>
+                keyValue='0 1 0 -2.5, 0 1 0 -2.75, 0 1 0 -3, 0 1 0 -2.75, 0 1 0 -2.5'>
             </OrientationInterpolator>
             <ROUTE 
-                fromNode='ToadRightLegHTimer' 
+                fromNode='ToadTimer' 
                 fromField='fraction_changed' 
                 toNode='ToadRightLegHMover'  
                 toField='set_fraction' 
@@ -370,6 +392,83 @@
                 toNode='RightLeg'  
                 toField='set_rotation' 
             />
+
+            <!-- Toad knee vertical stretching -->
+            <PositionInterpolator 
+                DEF="ToadKneeMover" 
+                key="0 0.25 0.5 0.75 1" 
+                keyValue="0.5 0 0  1 0 0  1 0 0 1 0 0 0.5 0 0">
+            </PositionInterpolator>
+            <Route 
+                fromNode="ToadTimer" 
+                fromField ="fraction_changed" 
+                toNode="ToadKneeMover" 
+                toField="set_fraction">
+            </Route>
+            <Route 
+                fromNode="ToadKneeMover" 
+                fromField ="value_changed" 
+                toNode="LegKnee" 
+                toField="translation">
+            </Route>
+
+            <!-- Toad ankle/paw vertical stretching -->
+            <PositionInterpolator 
+                DEF="ToadAnkleMover" 
+                key="0 0.25 0.5 0.75 1" 
+                keyValue="0 0 0  1 0 0  1 0 0 1 0 0 0 0 0">
+            </PositionInterpolator>
+            <Route 
+                fromNode="ToadTimer" 
+                fromField ="fraction_changed" 
+                toNode="ToadAnkleMover" 
+                toField="set_fraction">
+            </Route>
+            <Route 
+                fromNode="ToadAnkleMover" 
+                fromField ="value_changed" 
+                toNode="LegAnkle" 
+                toField="translation">
+            </Route>
+
+            <!-- Toad arm hip rotation -->
+            <OrientationInterpolator 
+                DEF='ToadArmHipRotationMover' 
+                key='0 0.25 0.5 1 1.25 1.5' 
+                keyValue='0 0 1 2.5, 0 0 1 2.75, 0 0 1 3, 0 0 1 2.75, 0 0 1 2.5'>
+            </OrientationInterpolator>
+            <ROUTE 
+                fromNode='ToadTimer' 
+                fromField='fraction_changed' 
+                toNode='ToadArmHipRotationMover'  
+                toField='set_fraction' 
+            />
+            <ROUTE 
+                fromNode='ToadArmHipRotationMover'  
+                fromField='value_changed' 
+                toNode='ArmHip'  
+                toField='set_rotation' 
+            />
+
+            <!-- Toad arm hip rotation -->
+            <OrientationInterpolator 
+                DEF='ToadArmAnkleRotationMover' 
+                key='0 0.25 0.5 1 1.25 1.5' 
+                keyValue='0 0 1 -1, 0 0 1 -0.75, 0 0 1 -0.5, 0 0 1 -0.75, 0 0 1 -1'>
+            </OrientationInterpolator>
+            <ROUTE 
+                fromNode='ToadTimer' 
+                fromField='fraction_changed' 
+                toNode='ToadArmAnkleRotationMover'  
+                toField='set_fraction' 
+            />
+            <ROUTE 
+                fromNode='ToadArmAnkleRotationMover'  
+                fromField='value_changed' 
+                toNode='ArmAnkle'  
+                toField='set_rotation' 
+            />
+
 
         </Scene>
     </X3D>
